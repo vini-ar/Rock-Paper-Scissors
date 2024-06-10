@@ -7,84 +7,82 @@
 /* Display Match Winner */
 
 
-const ACTIONS = ["Rock", "Paper", "Scissors"]
-let matchResultList = [];
+const ACTIONS = ["rock", "paper", "scissors"]
 let humanSelection;
 let machineSelection;
-let machineWin = false;
-let drawMatch = false;
+let round = 1;
+let humanScore = 0;
+let machineScore = 0;
 
-function displayPlayerActionsAvailable() {
-    ACTIONS.forEach((item, index) => {
-        console.log(`${index} - ${item}`)
-    })
-}
-
-function askPlayerAction(index) {
-    if (0 <= index && index <= 2) {
-        humanSelection = ACTIONS[index]
-        return
+function askPlayerAction() {
+    while (!ACTIONS.includes(humanSelection)) {
+        humanSelection = prompt("Choose your Action: ");
+        humanSelection = humanSelection.toLowerCase();
     }
-    index = prompt("Choose one Option: ")
-    askPlayerAction(index)
 }
 
 function chooseRandomActionForMachine() {
-    let index = Math.floor(Math.random() * 2);
+    let index = Math.floor(Math.random() * 3);
     machineSelection = ACTIONS[index]
 
 }
 
-function checkMatchResult(humanSelection, machineSelection) {
+function displayRoundResult() {
 
     /* Rock Winner over Scissors*/
     if (humanSelection === ACTIONS[2] && machineSelection === ACTIONS[0]) {
-        machineWin = true;
+        machineScore += 1;
+        console.log(`Machine Win Round ${round}`)
     }
     /* Paper Winner over Rock*/
     else if (humanSelection === ACTIONS[0] && machineSelection === ACTIONS[1]) {
-        machineWin = true;
+        machineScore += 1;
+        console.log(`Machine Win Round ${round}`)
     }
     /* Scissors Winner over Paper*/
 
     else if (humanSelection === ACTIONS[1] && machineSelection === ACTIONS[2]) {
-        machineWin = true;
+        machineScore += 1;
+        console.log(`Machine Win Round ${round}`)
     }
     else if (humanSelection === machineSelection) {
-        drawMatch = true;
-    }
-
-}
-function displayMatchResult() {
-    if (drawMatch === true) {
-        matchResultList.push("Draw")
-        console.log("Draw!")
-        return;
-    }
-    
-    if (machineWin === true) {
-        console.log("Machine Wins!")
-        matchResultList.push("Machine")
+        console.log("Draw")
     }
     else {
-        console.log("You Won!")
-        matchResultList.push("Human");
+        console.log(`Human Win Round ${round }`)
+        humanScore += 1;
+    }
+
+}
+function displayMatchWinner() {
+
+    if (humanScore > machineScore) {
+        console.log("Human Won!")
+    }
+    else if (machineScore > humanScore) {
+        console.log("Machine Won!")
+    }
+    else {
+        console.log("Draw")
     }
 }
 
 
-function playGame(round) {
-    if (round === 5) {
-        return;
+function playGame() {
+    while (round < 6) {
+        askPlayerAction()
+        chooseRandomActionForMachine()
+        displayRoundResult()
+        round += 1;
+        humanSelection = null;
     }
-
-    round += 1;
-    displayPlayerActionsAvailable()
-    askPlayerAction()
-    chooseRandomActionForMachine()
-    checkMatchResult(playerMoveIndex, machineMoveIndex)
-    displayMatchResult()
-    playGame(round)
-
+    displayMatchWinner();
+    humanSelection = null;
+    machineSelection = null;
+    round = null;
+    humanScore = null;
+    machineScore = null;
+   
 }
 
+playGame()
